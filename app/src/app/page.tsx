@@ -1,7 +1,16 @@
+import { useState } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 
-const products = [
+interface Product {
+  id: number
+  title: string
+  price: number
+  description: string
+  category: string
+}
+
+const products: Product[] = [
   {
     id: 1,
     title: "iPhone 9",
@@ -25,6 +34,12 @@ const products = [
   }
 ]
 export default function Home() {
+  const [cart, setCart] = useState<Product[]>([])
+  
+  const addToCart = (product: Product) => {
+    setCart([...cart, product])
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 p-8">
       <h1 className="text-3xl font-bold text-center mb-8">Produtos</h1>
@@ -38,10 +53,22 @@ export default function Home() {
             <CardContent>
               <p className="text-gray-700 mb-4">{product.description}</p>
               <p className="text-2xl font-bold text-green-600 mb-4">${product.price}</p>
-              <Button>Comprar</Button>
+              <Button onClick={() => addToCart(product)}>Comprar</Button>
             </CardContent>
           </Card>
         ))}
+      </div>
+      <div className="mt-8 max-w-6xl mx-auto">
+        <h2 className="text-2xl font-bold mb-4">Carrinho ({cart.length} itens)</h2>
+        {cart.length > 0 ? (
+          <ul className="list-disc list-inside">
+            {cart.map((item, index) => (
+              <li key={index} className="text-gray-700">{item.title} - ${item.price}</li>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-gray-500">Carrinho vazio</p>
+        )}
       </div>
     </div>
   );
